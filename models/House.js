@@ -1,54 +1,33 @@
 const mongoose = require('mongoose') // Importando la libreria
+const fetch = require('node-fetch'); // Importar fetch si estás en un entorno de Node.js
 
-// Creando el modelo de house
+// Creando el modelo de users
 const HouseSchema = new mongoose.Schema({
-    address: {
-        type: String, 
-        required: true
+    state: {
+        required: true,
+        type: String,
+        validate: {
+            validator: async function(state) {
+              // Validacion del departamento
+              var response = await fetch('https://api-colombia.com/api/v1/Department');
+              var departments = await response.json()
+              return departments.some(department => department.name.toUpperCase().includes(state.toUpperCase()));
+            },
+            message: props => `${props.value} no es un Departamento de Colombia!`
+          }
     },
     city: {
-        type: String, 
-        required: true
-    },
-    state: {
-        type: String, 
-        required: true  
-    },
-    size: {
-        type: Number, 
-        required: true
-    },
-    type: {
-        type: String, 
-        required: true
-    },
-    zip_code: {
-        type: Number, 
-        required: true
-    },
-    rooms: {
-        type: Number, 
-        required: true
-    },
-    bathrooms: {
-        type: Number, 
-        required: true
-    },
-    parking: {
-        type: Number, 
-        required: true
-    },
-    price: {
-        type: Number, 
-        required: true
-    },
-    code: {
-        type: Number, 
-        required: true
-    },
-    image: {
-        type: Number, 
-        required: true
+      required: true,
+      type: String,
+      validate: {
+          validator: async function(city) {
+            // Validacion del departamento
+            var response = await fetch('https://api-colombia.com/api/v1/City');
+            var cities = await response.json()
+            return cities.some(object => object.name.toUpperCase().includes(city.toUpperCase()));
+          },
+          message: props => `${props.value} no es una Ciudad de Colombia!`
+        }
     }
 })
 

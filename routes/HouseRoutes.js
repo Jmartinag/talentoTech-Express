@@ -1,13 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const UserSchema = require('../models/User');
-const UserController = require('../controllers/UserController'); //Importando el controllador
+const HouseSchema = require('../models/House');
 const multer = require('multer');
-const userController = new UserController(); // creando una instancia de ese controlador
 
-router.get('/house', async (req, res) => {
-     //Traer todos los usuarios
-     let users = await UserSchema.find(); 
-     res.json(users)
- })
+
+router.post('/house', async (req, res) => {
+    //Crear un usuario
+    let house = HouseSchema({
+        state: req.body.state,
+        city: req.body.city,
+    })
+
+    house.save().then((result) => {
+        res.send(result)
+    }).catch((err) => {        
+            res.send({"status" : "error", "message" :err.message})
+    })
+})
+
+module.exports = router

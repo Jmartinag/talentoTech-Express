@@ -2,17 +2,17 @@ const express = require('express') //Importo la libreria
 const app = express() //Inicializacion de la variable que usara la libreria
 const router = express.Router(); // Enrutar los servicios web
 const port = 3000; // Escuchar la ejecucion del servidor
-require('dotenv').config() //Obtener las variables de entorno
+require('dotenv').config() // Obtenemos las variables de entorno
+const socket = require('socket.io') //Importamos libreria socket.io
+const https = require('http').Server(app)
+const io = socket(http)
 
 const DB_URL = process.env.DB_URL || '';
-
 const mongoose = require('mongoose'); // Importo la libreria mongoose
 mongoose.connect(DB_URL) // Creo la cadena de conexion
 
 const userRoutes = require('./routes/UserRoutes');
-
-app.use(express.urlencoded({extended: true})) // Acceder a la informacion de las urls
-app.use(express.json()) // Analizar informacion en formato JSON
+const houseRoutes = require('./routes/HouseRoutes');
 
 //Metodo [GET, POST, PUT, PATCH, DELETE]
 // Nombre del servicio [/]
@@ -21,10 +21,27 @@ router.get('/', (req, res) => {
     res.send("Hello world")
 })
 
+io.on('connect', (socket) =>{
+    console.log("connected")
+    //Escuchando eventos desde el servidor
+    socket.on('message', (data) => {
+        console.log(data)
+        //Emitimos eventos hacia el cliente
+        socket.emit('message-receipt', {"message": "Mensaje recibido en el servidor"})
+    })
+})
+
+app.use(express.urlencoded({extended: true})) // Acceder a la informacion de las urls
+app.use(express.json()) // Analizar informacion en formato JSON
+app.use((req, res, next) => {
+    res.io = io
+    next()
+})
 //Ejecuto el servidor
 app.use(router)
-app.use('/uploads', express.static('./uploads'))
-app.use('/', userRoutes)
-app.listen(port, () => {
+app.use('/uploads', express.static('uploads'));
+// app.use('/', userRoutes)
+app.use('/', houseRoutes)
+http.listen(port, () => {
     console.log('Listen on ' + port)
 })
