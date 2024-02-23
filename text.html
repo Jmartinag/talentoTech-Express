@@ -17,4 +17,29 @@
         <div>
     <div>
 </body>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        var socket = io('http://localhost:3000', {
+            transports: ['websocket']
+        })
+
+        socket.on('connect', function(socket) {
+            console.log("connected");
+        })
+    })
+    
+    function addMessages(data){
+        const messageElement = document.createElement('li');
+        messageElement.textContent = data.body
+
+        const messageDiv = document.getElementById('mensajes')
+        messagesDiv.appendChild(messageElement)
+    }
+</script>
+
 </html>
