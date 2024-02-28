@@ -68,11 +68,11 @@ args: {
 }
 },
 Users: {
-type: GraphQLList(User),
+type: new GraphQLList(User),
 resolve: resolvers.Users
 },
 UsersByFilter: {
-type: GraphQLList(User),
+type: new GraphQLList(User),
 resolve: resolvers.UsersByFilter,
 args: {
   filter: { type: UserFilterInput }
