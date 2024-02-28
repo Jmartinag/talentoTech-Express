@@ -1,10 +1,10 @@
 const { GraphQLID, 
-    GraphQLObjectType,
-    GraphQLBoolean, 
-    GraphQLString,
-    GraphQLInputObjectType,
-    GraphQLList,
-    GraphQLSchema} = require('graphql')
+  GraphQLObjectType,
+  GraphQLBoolean, 
+  GraphQLString,
+  GraphQLInputObjectType,
+  GraphQLList,
+  GraphQLSchema} = require('graphql')
 const resolvers = require('./resolvers')
 
 const User = new GraphQLObjectType({
@@ -54,6 +54,14 @@ email: {type: GraphQLString}
 }
 })
 
+const MessageFilterInput = new GraphQLInputObjectType({
+name: 'MessageFilterInput',
+fields: {
+body: {type: GraphQLString},
+from: {type: GraphQLString},
+to: {type: GraphQLString}
+}
+})
 
 const queries = {
 hello: {
@@ -64,18 +72,36 @@ User: {
 type: User,
 resolve: resolvers.User,
 args: {
-  id: {type: GraphQLString}
+id: {type: GraphQLString}
 }
 },
 Users: {
-type: new GraphQLList(User),
+type: GraphQLList(User),
 resolve: resolvers.Users
 },
 UsersByFilter: {
-type: new GraphQLList(User),
+type: GraphQLList(User),
 resolve: resolvers.UsersByFilter,
 args: {
-  filter: { type: UserFilterInput }
+filter: { type: UserFilterInput }
+}
+},
+Message: {
+type: Message,
+resolve: resolvers.Message,
+args: {
+id: {type: GraphQLString}
+}
+},
+Messages: {
+type: GraphQLList(Message),
+resolve: resolvers.Messages
+},
+MessagesByFilter: {
+type: GraphQLList(Message),
+resolve: resolvers.MessagesByFilter,
+args: {
+filter: { type: MessageFilterInput }
 }
 }
 }
