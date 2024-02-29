@@ -29,6 +29,16 @@ readed: {type: GraphQLBoolean}
 }
 })
 
+const House = new GraphQLObjectType({
+  name: 'House',
+  fields: {
+  _id: { type: GraphQLString},
+  city: { type: GraphQLString},
+  state: { type: User},
+  type: { type: User},
+  image: {type: GraphQLString}
+  }
+  })
 //TODO: Implement House GraphQLObjectType
 // type House {
 //   id: ID!
@@ -63,6 +73,17 @@ to: {type: GraphQLString}
 }
 })
 
+//Implementando HousesFilterInput
+const HouseFilterInput = new GraphQLInputObjectType({
+  name: 'HousesFilterInput',
+  fields: {
+  city: {type: GraphQLString},
+  state: {type: GraphQLString},
+  type: {type: GraphQLString},
+  code: {type: GraphQLString}
+  }
+  })
+
 const queries = {
 hello: {
 type: GraphQLString, // Tipo de respuesta
@@ -76,11 +97,11 @@ id: {type: GraphQLString}
 }
 },
 Users: {
-type: GraphQLList(User),
+type: new GraphQLList(User),
 resolve: resolvers.Users
 },
 UsersByFilter: {
-type: GraphQLList(User),
+type: new GraphQLList(User),
 resolve: resolvers.UsersByFilter,
 args: {
 filter: { type: UserFilterInput }
@@ -94,14 +115,33 @@ id: {type: GraphQLString}
 }
 },
 Messages: {
-type: GraphQLList(Message),
+type: new GraphQLList(Message),
 resolve: resolvers.Messages
 },
 MessagesByFilter: {
-type: GraphQLList(Message),
+type: new GraphQLList(Message),
 resolve: resolvers.MessagesByFilter,
 args: {
 filter: { type: MessageFilterInput }
+}
+},
+//Implementando House
+House: {
+type: House,
+resolve: resolvers.House,
+args: {
+id: {type: GraphQLString}
+}
+},
+Houses: {
+type: new GraphQLList(House),
+resolve: resolvers.Messages
+},
+HousesByFilter: {
+type: new GraphQLList(House),
+resolve: resolvers.HousesByFilter,
+args: {
+filter: { type: HouseFilterInput }
 }
 }
 }
