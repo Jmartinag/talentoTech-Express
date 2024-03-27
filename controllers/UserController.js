@@ -30,6 +30,7 @@ class UserController {
                                  fullname: `${user.name} ${user.lastname}`
                 }, this.jwtSecret, { expiresIn: '1h' })
 
+        user.password = null       
         return {"status": "success", "token": token, "user": user}
 
         } catch (error) {
