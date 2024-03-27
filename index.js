@@ -7,6 +7,8 @@ const port = 3000; // Escuchar la ejecucion del servidor
 require('dotenv').config() // Obetenmos las variables de entorno
 /** Web Sockets */
 const socket = require('socket.io') // Importamos la libreria socket.io
+const cors =require('cors')
+app.use(cors());
 const http = require('http').Server(app)
 const io = socket(http)
 
